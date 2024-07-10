@@ -25,7 +25,6 @@ let reverse = function (x) {
 
   // fungsi ini untuk melooping, serta mendapatkan nilai terakhir
   // dan membalikkan nilai
-
   let reversed = 0;
   while (x > 0) {
     reversed = reversed * 10 + (x % 10);

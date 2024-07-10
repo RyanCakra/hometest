@@ -19,8 +19,11 @@
 **/
 
 let twoSum = function (nums, target) {
+  // fungsi ini untuk melooping, serta mendapatkan angka pertama.
   for (let i = 0; i < nums.length; i++)
+    // fungsi ini untuk melooping, serta mendapatkan angka kedua.
     for (let j = 1; j < nums.length; j++)
+      // fungsi ini untuk mengecek apakah angka tersebut sama dengan target.
       if (nums[i] + nums[j] === target) {
         return [i, j];
       }

@@ -2,24 +2,29 @@ import React, { useState, useRef, useEffect } from 'react';
 import './index.css';
 
 const App = () => {
+  // deklarasi state yang digunakan
   const [canvasSize, setCanvasSize] = useState({ width: 640, height: 360 });
   const [image, setImage] = useState(null);
-  const [imageProps, setImageProps] = useState({ x: 0, y: 0, width: 0, height: 0 });
+  const [imagePosition, setimagePosition] = useState({ x: 0, y: 0, width: 0, height: 0 });
   const [error, setError] = useState('');
   const canvasRef = useRef(null);
 
+  // fungsi ini akan dijalankan ketika terjadi perubahan pada canvasSize, image, dan imagePosition.
+  // yang berfungsi untuk mereload ulang canvas dan gambar baru sesuai dengan yang ditentukan
   useEffect(() => {
     if (image && canvasRef.current) {
       const ctx = canvasRef.current.getContext('2d');
       if (ctx) {
         ctx.clearRect(0, 0, canvasSize.width, canvasSize.height);
-        ctx.drawImage(image, imageProps.x, imageProps.y, imageProps.width, imageProps.height);
+        ctx.drawImage(image, imagePosition.x, imagePosition.y, imagePosition.width, imagePosition.height);
       } else {
         console.error('Failed to get canvas context.');
       }
     }
-  }, [canvasSize, image, imageProps]);
+  }, [canvasSize, image, imagePosition]);
 
+  // fungsi ini digunakan untuk menghandle perubahan pada file gambar yang diupload
+  // serta mengatur properti image dan imagePosition agar tetap sesuai dengan canvas
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
     if (file && file.type.startsWith('image/')) {
@@ -28,7 +33,7 @@ const App = () => {
         const scale = Math.min(canvasSize.width / img.width, canvasSize.height / img.height);
         const width = img.width * scale;
         const height = img.height * scale;
-        setImageProps({ x: 0, y: 0, width, height });
+        setimagePosition({ x: 0, y: 0, width, height });
         setImage(img);
         setError('');
       };
@@ -38,6 +43,9 @@ const App = () => {
     }
   };
 
+  // fungsi ini digunakan untuk menghandle perubahan pada ukuran canvas
+  // serta memastikan ukuran minimal adalah 100x100,
+  // dan akan memunculkan pesan kesalahan jika kurang dari itu
   const handleCanvasSizeChange = () => {
     const width = parseInt(document.getElementById('canvasWidth').value);
     const height = parseInt(document.getElementById('canvasHeight').value);
@@ -49,12 +57,13 @@ const App = () => {
     }
   };
 
-  const handleImagePropsChange = () => {
+  // ini berfungsi untuk mengubah posisi gambar sesuai dengan input user
+  const handleimagePositionChange = () => {
     const x = parseInt(document.getElementById('imageX').value);
     const y = parseInt(document.getElementById('imageY').value);
-    const width = parseInt(document.getElementById('imageWidth').value);
-    const height = parseInt(document.getElementById('imageHeight').value);
-    setImageProps({ x, y, width, height });
+    const width = Math.round(parseFloat(document.getElementById('imageWidth').value));
+    const height = Math.round(parseFloat(document.getElementById('imageHeight').value));
+    setimagePosition({ x, y, width, height });
   };
 
   return (
@@ -100,22 +109,22 @@ const App = () => {
           <div className="flex flex-col mb-4">
             <label className="mb-2">
               X:
-              <input id="imageX" type="number" defaultValue={imageProps.x} className="border ml-2 p-1 w-full" />
+              <input id="imageX" type="number" defaultValue={imagePosition.x} className="border ml-2 p-1 w-full" />
             </label>
             <label className="mb-2">
               Y:
-              <input id="imageY" type="number" defaultValue={imageProps.y} className="border ml-2 p-1 w-full" />
+              <input id="imageY" type="number" defaultValue={imagePosition.y} className="border ml-2 p-1 w-full" />
             </label>
             <label className="mb-2">
               Width:
-              <input id="imageWidth" type="number" defaultValue={imageProps.width} className="border ml-2 p-1 w-full" />
+              <input id="imageWidth" type="number" defaultValue={imagePosition.width} className="border ml-2 p-1 w-full" />
             </label>
             <label className="mb-2">
               Height:
-              <input id="imageHeight" type="number" defaultValue={imageProps.height} className="border ml-2 p-1 w-full" />
+              <input id="imageHeight" type="number" defaultValue={imagePosition.height} className="border ml-2 p-1 w-full" />
             </label>
           </div>
-          <button onClick={handleImagePropsChange} className="bg-blue-500 text-white px-4 py-2 rounded w-full">
+          <button onClick={handleimagePositionChange} className="bg-blue-500 text-white px-4 py-2 rounded w-full">
             Change Size
           </button>
         </div>
